@@ -1,3 +1,15 @@
+## 1.0.7
+
+- Added new CLI tool `bin/prompt_local.dart`:
+  - Uses `ChatOpenAI` from `langchain_openai` to send a prompt to a local LLM server.
+  - Connects to local server at `http://localhost:8080/v1` with model `local-model`.
+  - Handles input prompt from command line arguments and outputs the LLM response.
+  - Includes error handling with appropriate exit codes.
+
+- Dependencies:
+  - Added `langchain` ^0.8.1.
+  - Added `langchain_openai` ^0.8.1+1.
+
 ## 1.0.6
 
 - `PubDevSearchTool`:
