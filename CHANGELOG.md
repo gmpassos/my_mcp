@@ -1,3 +1,14 @@
+## 1.0.2
+
+- `BaseTool`:
+  - `stripHtmlTags`: updated to clean blank lines after removing HTML tags.
+  - Added new methods:
+    - `cleanSnippet`: removes HTML tags and decodes common HTML entities, then cleans blank lines.
+    - `cleanBlankLines`: normalizes and removes excessive blank lines and whitespace in strings.
+
+- `WikipediaSearchTool`:
+  - Replaced internal `_cleanSnippet` method with `BaseTool.cleanSnippet` for snippet cleaning in search results.
+
 ## 1.0.1
 
 - `.gitignore`:

@@ -45,7 +45,7 @@ abstract class BaseTool {
       Map<String, dynamic> args, RequestHandlerExtra? extra);
 
   String stripHtmlTags(String input) {
-    return input
+    input = input
         .replaceAll(
             RegExp(r'<script[^>]*>.*?</script>',
                 caseSensitive: false, dotAll: true),
@@ -82,8 +82,30 @@ abstract class BaseTool {
           (m) => '![](${m[1]})',
         )
         // remove remaining tags
-        .replaceAll(RegExp(r'<[^>]+>'), '')
-        .trim();
+        .replaceAll(RegExp(r'<[^>]+>'), '');
+
+    input = cleanBlankLines(input).trim();
+
+    return input;
+  }
+
+  String cleanSnippet(String html) {
+    html = html
+        .replaceAll(RegExp(r'<[^>]+>'), '') // remove HTML tags
+        .replaceAll('&quot;', '"')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>');
+    html = cleanBlankLines(html).trim();
+    return html;
+  }
+
+  String cleanBlankLines(String html) {
+    return html
+        .replaceAll(RegExp(r'(?:\n[ \t]+)+\n'), '\n')
+        .replaceAll(RegExp(r'\n[ \t]+'), '\n')
+        .replaceAll(RegExp(r'[ \t]+\n'), '\n')
+        .replaceAll(RegExp(r'\n+'), '\n');
   }
 }
 

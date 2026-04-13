@@ -44,16 +44,6 @@ class WikipediaSearchTool extends BaseTool {
         },
       );
 
-  String _cleanSnippet(String html) {
-    return html
-        .replaceAll(RegExp(r'<[^>]+>'), '') // remove HTML tags
-        .replaceAll('&quot;', '"')
-        .replaceAll('&amp;', '&')
-        .replaceAll('&lt;', '<')
-        .replaceAll('&gt;', '>')
-        .trim();
-  }
-
   @override
   Future<CallToolResult> execute(
     Map<String, dynamic> args,
@@ -80,7 +70,7 @@ class WikipediaSearchTool extends BaseTool {
 
     final results = search.map((item) {
       final title = item['title'] as String;
-      final snippet = _cleanSnippet(item['snippet'] as String);
+      final snippet = cleanSnippet(item['snippet'] as String);
       final url =
           'https://$lang.wikipedia.org/wiki/${Uri.encodeComponent(title)}';
 
