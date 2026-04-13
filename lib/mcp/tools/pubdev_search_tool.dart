@@ -12,7 +12,8 @@ class PubDevSearchTool extends BaseTool {
 
   @override
   String get description =>
-      'Searches pub.dev and returns a list of matching packages with metadata';
+      'Searches pub.dev for Dart and Flutter packages. Returns matching packages with metadata including name, description, latest version, popularity, and score. '
+      'Use this tool to find libraries, plugins, and dependencies for Dart or Flutter projects.';
 
   @override
   ToolInputSchema get inputSchema => ToolInputSchema(

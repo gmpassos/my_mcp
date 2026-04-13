@@ -1,3 +1,9 @@
+## 1.0.6
+
+- `PubDevSearchTool`:
+  - Updated `description` to provide more detailed information about the search capabilities and returned metadata, including name, description, latest version, popularity, and score.
+  - Clarified usage for finding Dart and Flutter libraries, plugins, and dependencies.
+
 ## 1.0.5
 
 - Added new `EvaluateExpressionTool`:
