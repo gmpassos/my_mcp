@@ -49,6 +49,25 @@ abstract class BaseTool {
       Map<String, dynamic> args, RequestHandlerExtra? extra);
 
   String stripHtmlTags(String input) {
+    final preBlocks = <String>[];
+
+    var mark = '___STRIP_PRE_BLOCK';
+    while (input.contains(mark)) {
+      mark += '-';
+    }
+
+    mark = '${mark}__';
+
+    // 1. Extract <pre> blocks
+    input = input.replaceAllMapped(
+      RegExp(r'<pre[^>]*>.*?</pre>', caseSensitive: false, dotAll: true),
+      (m) {
+        final token = '$mark${preBlocks.length}___';
+        preBlocks.add(m[0]!);
+        return token;
+      },
+    );
+
     input = input
         .replaceAll(
             RegExp(r'<script[^>]*>.*?</script>',
@@ -58,37 +77,36 @@ abstract class BaseTool {
             RegExp(r'<style[^>]*>.*?</style>',
                 caseSensitive: false, dotAll: true),
             '')
-        .replaceAll(RegExp(r'<br>'), '\n')
-        .replaceAll(RegExp(r'<p>'), '\n\n')
+        .replaceAll(RegExp(r'<br[^>]*>'), '\n')
+        .replaceAll(RegExp(r'<p[^>]*>'), '\n\n')
         // <a> → [text](url)
         .replaceAllMapped(
-          RegExp(
-            r'<a[^>]*href="([^"]+)"[^>]*>(.*?)</a>',
-            caseSensitive: false,
-            dotAll: true,
-          ),
+          RegExp(r'<a[^>]*href="([^"]+)"[^>]*>(.*?)</a>',
+              caseSensitive: false, dotAll: true),
           (m) => '[${m[2]}](${m[1]})',
         )
         // <img> → ![alt](src)
         .replaceAllMapped(
-          RegExp(
-            r'<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"[^>]*>',
-            caseSensitive: false,
-          ),
+          RegExp(r'<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"[^>]*>',
+              caseSensitive: false),
           (m) => '![${m[2]}](${m[1]})',
         )
-        // fallback if no alt attribute
         .replaceAllMapped(
-          RegExp(
-            r'<img[^>]*src="([^"]+)"[^>]*>',
-            caseSensitive: false,
-          ),
+          RegExp(r'<img[^>]*src="([^"]+)"[^>]*>', caseSensitive: false),
           (m) => '![](${m[1]})',
         )
         // remove remaining tags
         .replaceAll(RegExp(r'<[^>]+>'), '');
 
     input = cleanBlankLines(input).trim();
+
+    // 2. Restore <pre> blocks unchanged
+    for (var i = 0; i < preBlocks.length; i++) {
+      input = input.replaceAll(
+        '$mark${i}___',
+        preBlocks[i],
+      );
+    }
 
     return input;
   }

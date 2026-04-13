@@ -1,3 +1,12 @@
+## 1.0.11
+
+- `BaseTool`:
+  - `stripHtmlTags`:
+    - Added extraction and temporary replacement of `<pre>` blocks to preserve them during tag stripping.
+    - Updated regexes for `<br>` and `<p>` tags to allow attributes.
+    - Improved `<a>` and `<img>` tag handling with consolidated regex formatting.
+    - Restored `<pre>` blocks after cleaning other HTML tags.
+
 ## 1.0.10
 
 - `UrlFetchTool`:
