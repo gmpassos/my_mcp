@@ -1,3 +1,17 @@
+## 1.0.9
+
+- `BaseTool`:
+  - Added `tryJsonDecode` method to attempt JSON encoding of a string.
+  - Added `prompt` method to send prompts to a ChatOpenAI model with configurable system messages, temperature, and server URL.
+  - Imported `dart:convert`, `langchain`, and `langchain_openai` packages for JSON and LLM support.
+
+- `UrlFetchTool`:
+  - Added `asMarkdown` boolean input argument to optionally convert HTML content to Markdown.
+  - Updated `execute` method to:
+    - Convert fetched HTML content to Markdown using the `prompt` method if `asMarkdown` is true.
+    - Preserve links, images, and structure in the Markdown conversion.
+    - Log conversion steps.
+
 ## 1.0.8
 
 - `bin/prompt_local.dart`:

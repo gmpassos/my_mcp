@@ -10,6 +10,10 @@
 /// - [execute]: Implementation of the tool logic
 library;
 
+import 'dart:convert';
+
+import 'package:langchain/langchain.dart';
+import 'package:langchain_openai/langchain_openai.dart';
 import 'package:logging/logging.dart' as logging;
 import 'package:mcp_dart/mcp_dart.dart';
 
@@ -106,6 +110,37 @@ abstract class BaseTool {
         .replaceAll(RegExp(r'\n[ \t]+'), '\n')
         .replaceAll(RegExp(r'[ \t]+\n'), '\n')
         .replaceAll(RegExp(r'\n+'), '\n');
+  }
+
+  String? tryJsonDecode(String j) {
+    try {
+      return jsonEncode(j);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<String?> prompt(String prompt,
+      {List<String> system = const ['You are a helpful assistant.'],
+      double temperature = 0.7,
+      String llmServerURL = 'http://localhost:8080/v1'}) async {
+    final llm = ChatOpenAI(
+      baseUrl: llmServerURL,
+      defaultOptions: ChatOpenAIOptions(
+        temperature: temperature,
+      ),
+    );
+
+    final messages = [
+      ...system.map((e) => ChatMessage.system(e)),
+      ChatMessage.human(ChatMessageContent.text(prompt)),
+    ];
+
+    final response = await llm.invoke(PromptValue.chat(messages));
+
+    var output = response.outputAsString;
+
+    return output;
   }
 }
 
