@@ -1,3 +1,14 @@
+## 1.0.10
+
+- `UrlFetchTool`:
+  - Disabled the `asMarkdown` option in the input schema and commented out related code that converts HTML content to Markdown.
+- `run-llama-server.bat`:
+  - Updated server launch commands:
+    - Changed model from `gemma-4-E2B-it-Q4_K_M.gguf` to `gemma-4-E4B-it-Q4_K_M.gguf`.
+    - Increased `--ctx-size` to 128000.
+    - Added `--parallel 2` and `--tensor-split 1,0` options for multi-GPU usage.
+    - Adjusted `-ngl` and `-b` parameters for performance tuning.
+
 ## 1.0.9
 
 - `BaseTool`:

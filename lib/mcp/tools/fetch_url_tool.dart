@@ -28,11 +28,11 @@ class UrlFetchTool extends BaseTool {
                 'If true and the URL is a Wikipedia page, extracts and cleans the main article content (removes sidebars, navboxes, references, etc.)',
             defaultValue: true,
           ),
-          'asMarkdown': JsonSchema.boolean(
-            description:
-                'If true, converts HTML content to Markdown (preserving links and images)',
-            defaultValue: false,
-          ),
+          // 'asMarkdown': JsonSchema.boolean(
+          //   description:
+          //       'If true, converts HTML content to Markdown (preserving links and images)',
+          //   defaultValue: false,
+          // ),
         },
         required: ['url'],
       );
@@ -58,7 +58,7 @@ class UrlFetchTool extends BaseTool {
     final timeoutMs = (args['timeoutMs'] as num?)?.toInt() ?? 10000;
     final stripHtml = args['stripHtml'] as bool? ?? true;
     final stripWikipedia = args['stripWikipedia'] as bool? ?? true;
-    final asMarkdown = args['asMarkdown'] as bool? ?? false;
+    // final asMarkdown = args['asMarkdown'] as bool? ?? false;
 
     final response =
         await http.get(url).timeout(Duration(milliseconds: timeoutMs));
@@ -78,22 +78,22 @@ class UrlFetchTool extends BaseTool {
       }
     }
 
-    if (asMarkdown && body.trim().isNotEmpty) {
-      logger.info("Converting to markdown...");
-
-      var markdown = await prompt(body, system: const [
-        'Convert the input into clean, readable Markdown. '
-            'Preserve structure such as headings, paragraphs, lists, tables, links, and images when present. '
-            'If the input is HTML, remove tags and convert appropriately. '
-            'If the input is plain text or another format, normalize it into well-structured Markdown. '
-            'Do not add explanations. Output only Markdown.'
-      ]);
-
-      if (markdown != null) {
-        logger.info("Converted to markdown");
-        body = markdown;
-      }
-    }
+    // if (asMarkdown && body.trim().isNotEmpty) {
+    //   logger.info("Converting to markdown...");
+    //
+    //   var markdown = await prompt(body, system: const [
+    //     'Convert the input into clean, readable Markdown. '
+    //         'Preserve structure such as headings, paragraphs, lists, tables, links, and images when present. '
+    //         'If the input is HTML, remove tags and convert appropriately. '
+    //         'If the input is plain text or another format, normalize it into well-structured Markdown. '
+    //         'Do not add explanations. Output only Markdown.'
+    //   ]);
+    //
+    //   if (markdown != null) {
+    //     logger.info("Converted to markdown");
+    //     body = markdown;
+    //   }
+    // }
 
     logger.info("fetch_url.response[$contentType]> $body");
 
