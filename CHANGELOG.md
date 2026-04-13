@@ -1,3 +1,14 @@
+## 1.0.3
+
+- `UrlFetchTool`:
+  - Added `stripWikipedia` input option to extract and clean main article content from Wikipedia pages.
+  - Updated `execute` method to:
+    - Detect Wikipedia URLs and extract main content by removing sidebars, navboxes, references, and other clutter.
+    - Apply HTML stripping after Wikipedia content extraction if `stripHtml` is true.
+  - Added private method `extractWikipediaMainContent` to parse and clean Wikipedia HTML content.
+- Dependencies:
+  - Added `html` package ^0.15.6 for HTML parsing.
+
 ## 1.0.2
 
 - `BaseTool`:

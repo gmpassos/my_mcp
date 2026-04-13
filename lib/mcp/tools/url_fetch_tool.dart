@@ -1,3 +1,4 @@
+import 'package:html/parser.dart' as html_parser;
 import 'package:http/http.dart' as http;
 import 'package:mcp_dart/mcp_dart.dart';
 
@@ -20,6 +21,11 @@ class UrlFetchTool extends BaseTool {
           ),
           'stripHtml': JsonSchema.boolean(
             description: 'If true, removes HTML tags from response body',
+            defaultValue: true,
+          ),
+          'stripWikipedia': JsonSchema.boolean(
+            description:
+                'If true and the URL is a Wikipedia page, extracts and cleans the main article content (removes sidebars, navboxes, references, etc.)',
             defaultValue: true,
           ),
         },
@@ -46,6 +52,7 @@ class UrlFetchTool extends BaseTool {
     final url = Uri.parse(args['url'] as String);
     final timeoutMs = (args['timeoutMs'] as num?)?.toInt() ?? 10000;
     final stripHtml = args['stripHtml'] as bool? ?? true;
+    final stripWikipedia = args['stripWikipedia'] as bool? ?? true;
 
     final response =
         await http.get(url).timeout(Duration(milliseconds: timeoutMs));
@@ -55,8 +62,14 @@ class UrlFetchTool extends BaseTool {
 
     final isHtml = contentType.contains('text/html');
 
-    if (stripHtml && isHtml) {
-      body = stripHtmlTags(body);
+    if (isHtml) {
+      if (stripWikipedia && url.host.endsWith('.wikipedia.org')) {
+        body = extractWikipediaMainContent(body);
+      }
+
+      if (stripHtml) {
+        body = stripHtmlTags(body);
+      }
     }
 
     logger.info("fetch_url.response[$contentType]> $body");
@@ -67,5 +80,22 @@ class UrlFetchTool extends BaseTool {
       'contentType': contentType,
       'finalUrl': response.request?.url.toString() ?? url.toString(),
     });
+  }
+
+  String extractWikipediaMainContent(String html) {
+    final document = html_parser.parse(html);
+
+    final content = document.querySelector('.mw-parser-output');
+    if (content == null) return html;
+
+    // Remove junk
+    content
+        .querySelectorAll(
+            'table.infobox, table.navbox, .metadata, .mw-editsection, '
+            '.reference, .reflist, .navbox, .sidebar, '
+            '.thumb, style, script')
+        .forEach((e) => e.remove());
+
+    return content.innerHtml.trim();
   }
 }
