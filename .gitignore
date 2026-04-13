@@ -3,3 +3,8 @@
 build/
 pubspec.lock
 .env
+
+
+.DS_Store
+
+*.exe

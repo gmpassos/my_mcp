@@ -43,6 +43,48 @@ abstract class BaseTool {
   /// Returns a [CallToolResult] with either success content or an error.
   Future<CallToolResult> execute(
       Map<String, dynamic> args, RequestHandlerExtra? extra);
+
+  String stripHtmlTags(String input) {
+    return input
+        .replaceAll(
+            RegExp(r'<script[^>]*>.*?</script>',
+                caseSensitive: false, dotAll: true),
+            '')
+        .replaceAll(
+            RegExp(r'<style[^>]*>.*?</style>',
+                caseSensitive: false, dotAll: true),
+            '')
+        .replaceAll(RegExp(r'<br>'), '\n')
+        .replaceAll(RegExp(r'<p>'), '\n\n')
+        // <a> → [text](url)
+        .replaceAllMapped(
+          RegExp(
+            r'<a[^>]*href="([^"]+)"[^>]*>(.*?)</a>',
+            caseSensitive: false,
+            dotAll: true,
+          ),
+          (m) => '[${m[2]}](${m[1]})',
+        )
+        // <img> → ![alt](src)
+        .replaceAllMapped(
+          RegExp(
+            r'<img[^>]*src="([^"]+)"[^>]*alt="([^"]*)"[^>]*>',
+            caseSensitive: false,
+          ),
+          (m) => '![${m[2]}](${m[1]})',
+        )
+        // fallback if no alt attribute
+        .replaceAllMapped(
+          RegExp(
+            r'<img[^>]*src="([^"]+)"[^>]*>',
+            caseSensitive: false,
+          ),
+          (m) => '![](${m[1]})',
+        )
+        // remove remaining tags
+        .replaceAll(RegExp(r'<[^>]+>'), '')
+        .trim();
+  }
 }
 
 /// Extension to register tools with an MCP server.

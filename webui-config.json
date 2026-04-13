@@ -1,0 +1,10 @@
+{
+  "mcpServers": [
+    {
+      "name": "localhost-mcp",
+      "url": "http://localhost:3000/mcp",
+      "useProxy": true,
+      "enabled": true
+    }
+  ]
+}

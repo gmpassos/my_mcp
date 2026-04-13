@@ -20,6 +20,7 @@ class UrlFetchTool extends BaseTool {
           ),
           'stripHtml': JsonSchema.boolean(
             description: 'If true, removes HTML tags from response body',
+            defaultValue: true,
           ),
         },
         required: ['url'],
@@ -35,22 +36,6 @@ class UrlFetchTool extends BaseTool {
         },
       );
 
-  String _stripHtmlTags(String input) {
-    return input
-        .replaceAll(
-            RegExp(r'<script[^>]*>.*?</script>',
-                caseSensitive: false, dotAll: true),
-            '')
-        .replaceAll(
-            RegExp(r'<style[^>]*>.*?</style>',
-                caseSensitive: false, dotAll: true),
-            '')
-        .replaceAll(RegExp(r'<[^>]+>'), '')
-        .replaceAll(RegExp(r'\s+\n'), '\n')
-        .replaceAll(RegExp(r'\n\s+'), '\n')
-        .trim();
-  }
-
   @override
   Future<CallToolResult> execute(
     Map<String, dynamic> args,
@@ -60,7 +45,7 @@ class UrlFetchTool extends BaseTool {
 
     final url = Uri.parse(args['url'] as String);
     final timeoutMs = (args['timeoutMs'] as num?)?.toInt() ?? 10000;
-    final stripHtml = args['stripHtml'] as bool? ?? false;
+    final stripHtml = args['stripHtml'] as bool? ?? true;
 
     final response =
         await http.get(url).timeout(Duration(milliseconds: timeoutMs));
@@ -71,7 +56,7 @@ class UrlFetchTool extends BaseTool {
     final isHtml = contentType.contains('text/html');
 
     if (stripHtml && isHtml) {
-      body = _stripHtmlTags(body);
+      body = stripHtmlTags(body);
     }
 
     logger.info("fetch_url.response[$contentType]> $body");
