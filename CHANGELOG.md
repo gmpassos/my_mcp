@@ -1,3 +1,19 @@
+## 1.0.5
+
+- Added new `EvaluateExpressionTool`:
+  - Evaluates mathematical expressions with support for variables and functions.
+  - Supports operators (+, -, *, /, %, ^), parentheses, constants (pi, e), and standard math functions (sin, cos, tan, log, sqrt, etc.).
+  - Accepts variables as a map for substitution in expressions.
+  - Returns the numeric evaluation result or an error message on failure.
+
+- `tools.dart`:
+  - Removed `CalculatorTool`.
+  - Added `EvaluateExpressionTool`.
+  - Updated imports to reflect renamed and reordered tools (`fetch_url_tool.dart`, `pubdev_search_tool.dart`, `wikipedia_search_tool.dart`).
+
+- Dependencies:
+  - Added `math_expressions` package version ^3.1.0.
+
 ## 1.0.4
 
 - `UrlFetchTool`:
