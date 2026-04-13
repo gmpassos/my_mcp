@@ -85,15 +85,32 @@ class UrlFetchTool extends BaseTool {
   String extractWikipediaMainContent(String html) {
     final document = html_parser.parse(html);
 
-    final content = document.querySelector('.mw-parser-output');
+    final content = document.querySelector('#bodyContent');
     if (content == null) return html;
 
-    // Remove junk
+    // Remove noisy elements
     content
         .querySelectorAll(
-            'table.infobox, table.navbox, .metadata, .mw-editsection, '
-            '.reference, .reflist, .navbox, .sidebar, '
-            '.thumb, style, script')
+            // navigation / layout
+            '.navbox, .vertical-navbox, .sidebar, .metadata, '
+
+            // editing / UI
+            '.mw-editsection, .mw-jump-link, '
+
+            // references / citations
+            '.reference, .reflist, '
+
+            // media / thumbnails
+            '.thumb, .gallery, '
+
+            // tables that are not core text
+            'table.infobox, table.navbox, '
+
+            // citations
+            '.mw-references-wrap, '
+
+            // scripts/styles
+            'style, script')
         .forEach((e) => e.remove());
 
     return content.innerHtml.trim();

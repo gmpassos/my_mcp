@@ -1,3 +1,16 @@
+## 1.0.4
+
+- `UrlFetchTool`:
+  - `extractWikipediaMainContent`:
+    - Changed main content selector from `.mw-parser-output` to `#bodyContent`.
+    - Expanded removal of noisy elements to include:
+      - Navigation/layout: `.navbox`, `.vertical-navbox`, `.sidebar`, `.metadata`.
+      - Editing/UI: `.mw-editsection`, `.mw-jump-link`.
+      - References/citations: `.reference`, `.reflist`, `.mw-references-wrap`.
+      - Media/thumbnails: `.thumb`, `.gallery`.
+      - Non-core text tables: `table.infobox`, `table.navbox`.
+      - Scripts and styles: `style`, `script`.
+
 ## 1.0.3
 
 - `UrlFetchTool`:
