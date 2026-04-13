@@ -1,3 +1,14 @@
+## 1.0.8
+
+- `bin/prompt_local.dart`:
+  - Added timing measurement for prompt execution duration.
+  - Added detailed logging including prompt input, messages sent, request status, and raw response.
+  - Refactored prompt message construction into a `messages` list.
+  - Improved error handling with stacktrace output.
+  - Introduced `tryJsonDecode` helper to safely encode response output as JSON for debug logging.
+  - Changed hardcoded base URL and API key to use a constant `llmServerURL` and removed unnecessary API key.
+  - Added usage error message when no prompt argument is provided.
+
 ## 1.0.7
 
 - Added new CLI tool `bin/prompt_local.dart`:
