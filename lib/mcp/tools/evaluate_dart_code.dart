@@ -16,61 +16,78 @@ class EvaluateDartCodeTool extends BaseTool {
   ToolInputSchema get inputSchema => ToolInputSchema(
         properties: {
           'code': JsonSchema.string(
-            description: """
+            description: r"""
 Dart code to execute.
 
 Rules:
 - Must be valid Dart code
-- No imports or dependencies
-- Should return a value (last expression or explicit return)
-- Can define variables, functions, classes
+- No imports or external dependencies
+- Can define functions and classes
+- MUST NOT execute the function directly
+- MUST only DEFINE the function to be invoked
+- The function will be called separately using `function` and `parameters`
 
-Examples:
+Important:
+- Always structure the code so the desired entry point is a named function
+- Do not include top-level execution (no direct calls)
 
-- Simple expression:
-  "1 + 2"
+Example (define only, do NOT call):
 
-- Using variables and statements:
-  "int x = 5; x *= 2; x;"
-
-- Defining and calling a function with conditional logic:
 '''
-int sumOrDouble(int a, int b) {
-  if (a > b) {
-    return a + b;
-  } else {
-    return (a + b) * 2;
-  }
+int sum(int a, int b) {
+  var r = a + b;
+  print('r: $r');
+  return r;
 }
 '''
-
 """,
           ),
           'function': JsonSchema.string(
             description: """
-Function name to invoke after loading the code.
+Function name to invoke.
 
-- Defaults to `main` if not provided
-- Must match a function defined in the code
+Rules:
+- Must exactly match a function defined in `code`
+- Must be a top-level function (not nested)
+- Defaults to `main` if omitted
 
 Example:
-- "sumOrDouble"
+"sum"
 """,
             defaultValue: 'main',
           ),
           'parameters': JsonSchema.array(
-            description: """
+            description: r"""
 Parameters to pass to the invoked function.
 
-- Must match the function signature
+Rules:
+- Must match the function signature exactly
 - Order matters
+- Use JSON-compatible values only
 
 Example:
-- [3, 4]
+[5, 10]
 """,
           ),
         },
         required: ['code'],
+        description: r"""
+Expected tool call format:
+
+{
+  "code": "<Dart code with function definitions only>",
+  "function": "<function name>",
+  "parameters": [<args>]
+}
+
+Example:
+
+{
+  "code": "int sum(int a, int b) {\n  var r = a + b;\n  print('r: $r');\n  return r;\n}",
+  "function": "sum",
+  "parameters": [5, 10]
+}
+""",
       );
 
   @override
@@ -188,10 +205,15 @@ Example:
         'result': result,
         'output': output,
       });
-    } catch (e, st) {
+    } catch (e, s) {
+      logger.severe(
+          "evaluate_dart_code> ERROR calling function: $function( ${parameters != null ? parameters.join(', ') : ''} )",
+          e,
+          s);
+
       return CallToolResult(
         content: [
-          TextContent(text: 'Failed to execute Dart code: $e\n$st'),
+          TextContent(text: 'Failed to execute Dart code: $e\n$s'),
         ],
         isError: true,
       );

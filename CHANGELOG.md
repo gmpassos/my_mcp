@@ -1,3 +1,21 @@
+## 1.0.16
+
+- `EvaluateDartCodeTool`:
+  - Updated `inputSchema` for `code` property:
+    - Expanded and clarified rules for Dart code input.
+    - Added detailed instructions emphasizing:
+      - No imports or external dependencies.
+      - Code must only define functions/classes without direct execution.
+      - The function to invoke is specified separately.
+    - Added multi-line example demonstrating proper function definition without invocation.
+  - Updated `inputSchema` for `function` property:
+    - Clarified rules requiring exact match to a top-level function defined in `code`.
+    - Specified default is `main`.
+  - Updated `inputSchema` for `parameters` property:
+    - Clarified rules requiring exact match to function signature with JSON-compatible values.
+  - Added overall `inputSchema` description with example JSON call format.
+  - Improved error logging in `call` method to include stack trace and detailed function call info.
+
 ## 1.0.15
 
 - `EvaluateDartCodeTool`:
