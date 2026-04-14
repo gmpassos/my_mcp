@@ -130,9 +130,27 @@ abstract class BaseTool {
         .replaceAll(RegExp(r'\n+'), '\n');
   }
 
-  String? tryJsonDecode(String j) {
+  Object? tryJsonDecode(String j) {
     try {
-      return jsonEncode(j);
+      return json.decode(j);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String? tryJsonEncode(Object? o) {
+    try {
+      return json.encode(o);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Object? toJsonType(Object? o) {
+    try {
+      var j = tryJsonEncode(o);
+      if (j == null) return null;
+      return tryJsonDecode(j);
     } catch (_) {
       return null;
     }

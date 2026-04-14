@@ -1,3 +1,20 @@
+## 1.0.12
+
+- `BaseTool`:
+  - `tryJsonDecode`: fixed to decode JSON string instead of encoding.
+  - Added `tryJsonEncode` to safely encode objects to JSON string.
+  - Added `toJsonType` to convert arbitrary objects to JSON-compatible types.
+- Added new tool `EvaluateDartCodeTool`:
+  - Executes Dart code dynamically using Apollo VM.
+  - Supports specifying code, function name, and parameters.
+  - Returns the evaluated result as JSON-compatible output.
+- `tools.dart`:
+  - Added `EvaluateDartCodeTool` to the list of available tools.
+- `pubspec.yaml`:
+  - Added dependency on `apollovm` package ^0.1.2.
+  - Added `publish_to: none`.
+  - Added `dependency_overrides` for `freezed_annotation` ^3.1.0.
+
 ## 1.0.11
 
 - `BaseTool`:
