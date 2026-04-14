@@ -13,30 +13,7 @@ class EvaluateDartCodeTool extends BaseTool {
       'Executes Dart code dynamically using Apollo VM and returns the evaluated result of the code';
 
   @override
-  ToolInputSchema get inputSchema =>
-      JsonSchema.anyOf([inputSchemaExpressionMode, inputSchemaFunctionMode])
-          as ToolInputSchema;
-
-  ToolInputSchema get inputSchemaExpressionMode => ToolInputSchema(
-        properties: {
-          'code': JsonSchema.string(
-            description: """
-Dart code to execute as an expression.
-
-Rules:
-- Must NOT define a function to be called externally
-- Must return a value (last expression)
-
-Examples:
-- "1 + 2"
-- "int x = 5; x * 2;"
-""",
-          ),
-        },
-        required: ['code'],
-      );
-
-  ToolInputSchema get inputSchemaFunctionMode => ToolInputSchema(
+  ToolInputSchema get inputSchema => ToolInputSchema(
         properties: {
           'code': JsonSchema.string(
             description: """
@@ -99,6 +76,9 @@ Example:
   @override
   ToolOutputSchema? get outputSchema => ToolOutputSchema(
         properties: {
+          'invokedFunction': JsonSchema.string(
+            description: 'Name of the function that was invoked.',
+          ),
           'result': JsonSchema.anyOf(
             [
               JsonSchema.string(),
@@ -125,7 +105,7 @@ Example:
     logger.info("evaluate_dart_code> $args");
 
     final code = args['code'] as String;
-    final function = args['function'] as String? ?? 'main';
+    var function = (args['function'] as String?)?.trim();
     final parameters = args['parameters'] as List?;
 
     try {
@@ -152,6 +132,29 @@ Example:
           ],
           isError: true,
         );
+      }
+
+      if (function == null || function.isEmpty) {
+        var namespace = vm.getNamespace('dart', '');
+        var loadedFunctions = namespace?.functions ?? [];
+
+        logger.info(
+            "evaluate_dart_code> Function variable was empty or null. Checking namespace loaded functions: $loadedFunctions");
+
+        if (loadedFunctions.isEmpty) {
+          function = 'main';
+          logger.info(
+              "evaluate_dart_code> No functions found in 'dart' namespace. Setting function to default 'main'.");
+        } else if (loadedFunctions.length == 1) {
+          function = loadedFunctions.first;
+          logger.info(
+              "evaluate_dart_code> Single function found in 'dart' namespace. Setting function to: $function");
+        } else {
+          // Log which function was chosen when multiple exist
+          function = loadedFunctions.last;
+          logger.info(
+              "evaluate_dart_code> Multiple functions found (count: ${loadedFunctions.length}). Setting function to the last loaded: $function");
+        }
       }
 
       final dartRunner = vm.createRunner('dart')!;
@@ -181,6 +184,7 @@ Example:
       logger.info("evaluate_dart_code> output: <<<\n${output.join('\n')}\n>>>");
 
       return CallToolResult.fromStructuredContent({
+        'invokedFunction': function,
         'result': result,
         'output': output,
       });

@@ -1,3 +1,15 @@
+## 1.0.15
+
+- `EvaluateDartCodeTool`:
+  - Simplified input schema to a single `ToolInputSchema` allowing full Dart code execution with variables, functions, and classes.
+  - Added `invokedFunction` field to output schema to indicate which function was executed.
+  - Enhanced `execute` method:
+    - Automatically determines which function to invoke if `function` argument is null or empty:
+      - Uses `'main'` if no functions are found.
+      - Uses the single function if only one is found.
+      - Uses the last function if multiple are found, logging the choice.
+    - Improved logging for function selection and execution steps.
+
 ## 1.0.14
 
 - `EvaluateDartCodeTool`:
