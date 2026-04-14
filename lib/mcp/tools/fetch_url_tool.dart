@@ -10,6 +10,10 @@ class UrlFetchTool extends BaseTool {
   String get name => 'fetch_url';
 
   @override
+  ToolAnnotations? get annotations =>
+      ToolAnnotations(title: 'URL fetcher', openWorldHint: true);
+
+  @override
   String get description => 'Fetches the content of a URL via HTTP GET';
 
   @override

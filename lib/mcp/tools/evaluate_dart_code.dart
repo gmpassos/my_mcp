@@ -13,7 +13,30 @@ class EvaluateDartCodeTool extends BaseTool {
       'Executes Dart code dynamically using Apollo VM and returns the evaluated result of the code';
 
   @override
-  ToolInputSchema get inputSchema => ToolInputSchema(
+  ToolInputSchema get inputSchema =>
+      JsonSchema.anyOf([inputSchemaExpressionMode, inputSchemaFunctionMode])
+          as ToolInputSchema;
+
+  ToolInputSchema get inputSchemaExpressionMode => ToolInputSchema(
+        properties: {
+          'code': JsonSchema.string(
+            description: """
+Dart code to execute as an expression.
+
+Rules:
+- Must NOT define a function to be called externally
+- Must return a value (last expression)
+
+Examples:
+- "1 + 2"
+- "int x = 5; x * 2;"
+""",
+          ),
+        },
+        required: ['code'],
+      );
+
+  ToolInputSchema get inputSchemaFunctionMode => ToolInputSchema(
         properties: {
           'code': JsonSchema.string(
             description: """
@@ -60,7 +83,7 @@ Example:
           ),
           'parameters': JsonSchema.array(
             description: """
-Parameters to pass to the function.
+Parameters to pass to the invoked function.
 
 - Must match the function signature
 - Order matters

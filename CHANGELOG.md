@@ -1,3 +1,19 @@
+## 1.0.14
+
+- `EvaluateDartCodeTool`:
+  - Updated `inputSchema` to support two modes: expression mode and function mode.
+  - Added `inputSchemaExpressionMode` for executing Dart expressions that return a value without defining external functions.
+  - Added `inputSchemaFunctionMode` for executing Dart code that can define functions, classes, and variables, with optional invocation of a named function and parameters.
+
+- `UrlFetchTool`:
+  - Added `annotations` with title "URL fetcher" and `openWorldHint` set to true.
+
+- `PubDevSearchTool`:
+  - Added `annotations` with title "pub.dev search", `openWorldHint` and `readOnlyHint` set to true.
+
+- `WikipediaSearchTool`:
+  - Added `annotations` with title "wikipedia.org search", `openWorldHint` and `readOnlyHint` set to true.
+
 ## 1.0.13
 
 - `evaluate_dart_code.dart`:

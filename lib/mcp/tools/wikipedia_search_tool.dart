@@ -11,6 +11,10 @@ class WikipediaSearchTool extends BaseTool {
   String get name => 'wikipedia_search';
 
   @override
+  ToolAnnotations? get annotations => ToolAnnotations(
+      title: 'wikipedia.org search', openWorldHint: true, readOnlyHint: true);
+
+  @override
   String get description =>
       'Searches Wikipedia and returns a list of matching articles with summaries';
 

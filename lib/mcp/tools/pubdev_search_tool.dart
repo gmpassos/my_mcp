@@ -11,6 +11,10 @@ class PubDevSearchTool extends BaseTool {
   String get name => 'pubdev_search';
 
   @override
+  ToolAnnotations? get annotations => ToolAnnotations(
+      title: 'pub.dev search', openWorldHint: true, readOnlyHint: true);
+
+  @override
   String get description =>
       'Searches pub.dev for Dart and Flutter packages. Returns matching packages with metadata including name, description, latest version, popularity, and score. '
       'Use this tool to find libraries, plugins, and dependencies for Dart or Flutter projects.';
