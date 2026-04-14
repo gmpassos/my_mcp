@@ -126,12 +126,16 @@ Example:
     final parameters = args['parameters'] as List?;
 
     try {
+      extra?.sendProgress(1 / 10, message: "Starting ApolloVM...", total: 10);
+
       // Create VM
       final vm = ApolloVM();
 
       var codeUnit = SourceCodeUnit('dart', code);
 
       try {
+        extra?.sendProgress(2 / 10, message: "Loading code...", total: 10);
+
         var loadOK = await vm.loadCodeUnit(codeUnit);
 
         if (!loadOK) {
@@ -150,6 +154,12 @@ Example:
           isError: true,
         );
       }
+
+      extra?.sendProgress(3 / 10,
+          message: "Code successfully loaded.", total: 10);
+
+      extra?.sendProgress(4 / 10,
+          message: "Resolving function to invoke...", total: 10);
 
       if (function == null || function.isEmpty) {
         var namespace = vm.getNamespace('dart', '');
@@ -174,6 +184,9 @@ Example:
         }
       }
 
+      extra?.sendProgress(5 / 10,
+          message: "Preparing VM runtime...", total: 10);
+
       final dartRunner = vm.createRunner('dart')!;
 
       final output = <String>[];
@@ -181,8 +194,16 @@ Example:
       // Map the `print` function in the VM:
       dartRunner.externalPrintFunction = (o) => output.add('$o');
 
+      extra?.sendProgress(6 / 10,
+          message: "Defined `print` function.", total: 10);
+
       logger.info(
           "evaluate_dart_code> executing function: $function( ${parameters != null ? parameters.join(', ') : ''} )");
+
+      extra?.sendProgress(7 / 10,
+          message:
+              "Executing function: $function(${parameters?.length ?? ''})...",
+          total: 10);
 
       final astValue = await dartRunner.executeFunction(
         '',
@@ -190,11 +211,23 @@ Example:
         positionalParameters: parameters,
       );
 
+      extra?.sendProgress(8 / 10,
+          message:
+              "Function execution completed. Returned value of type: ${astValue.type}",
+          total: 10);
+
       final value = astValue.getValueNoContext();
+
+      extra?.sendProgress(9 / 10,
+          message: "Resolved value (type: ${value.runtimeType}).", total: 10);
 
       logger.info("evaluate_dart_code> result: $value");
 
       final result = toJsonType(value) ?? value;
+
+      extra?.sendProgress(10 / 10,
+          message: "Resolved JSON return value (type: ${result.runtimeType}).",
+          total: 10);
 
       logger.info("evaluate_dart_code> result as json: $result");
 

@@ -1,3 +1,19 @@
+## 1.0.19
+
+- `evaluate_dart_code.dart`:
+  - `execute` method:
+    - Added progress reporting via `extra?.sendProgress` at multiple stages:
+      - Starting ApolloVM initialization.
+      - Loading code.
+      - Code successfully loaded.
+      - Resolving function to invoke.
+      - Preparing VM runtime.
+      - Defining `print` function.
+      - Executing function with parameters.
+      - Function execution completed with returned value type.
+      - Resolved value type.
+      - Resolved JSON return value type.
+
 ## 1.0.18
 
 - Dependency updates:
