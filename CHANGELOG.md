@@ -1,3 +1,11 @@
+## 1.0.13
+
+- `evaluate_dart_code.dart`:
+  - `execute` method:
+    - Added capturing of `print()` output from executed Dart code by mapping `print` to a local list.
+    - Included captured stdout lines in the returned structured content under the `output` field.
+    - Added `output` field to the JSON schema describing the execution result.
+
 ## 1.0.12
 
 - `BaseTool`:

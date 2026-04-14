@@ -88,6 +88,11 @@ Example:
             ],
             description: 'Execution result',
           ),
+          'output': JsonSchema.array(
+            items: JsonSchema.string(),
+            description:
+                'Captured stdout: one entry per print() call, in order',
+          ),
         },
       );
 
@@ -128,6 +133,11 @@ Example:
 
       final dartRunner = vm.createRunner('dart')!;
 
+      final output = <String>[];
+
+      // Map the `print` function in the VM:
+      dartRunner.externalPrintFunction = (o) => output.add('$o');
+
       logger.info(
           "evaluate_dart_code> executing function: $function( ${parameters != null ? parameters.join(', ') : ''} )");
 
@@ -145,8 +155,11 @@ Example:
 
       logger.info("evaluate_dart_code> result as json: $result");
 
+      logger.info("evaluate_dart_code> output: <<<\n${output.join('\n')}\n>>>");
+
       return CallToolResult.fromStructuredContent({
         'result': result,
+        'output': output,
       });
     } catch (e, st) {
       return CallToolResult(
