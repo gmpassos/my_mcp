@@ -1,3 +1,8 @@
+## 1.0.18
+
+- Dependency updates:
+  - Updated `apollovm` from ^0.1.3 to ^0.1.4 in `pubspec.yaml`.
+
 ## 1.0.17
 
 - Dependency updates:
