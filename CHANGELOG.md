@@ -1,3 +1,8 @@
+## 1.0.23
+
+- Dependency updates:
+  - `apollovm`: updated from ^0.1.7 to ^0.1.8
+
 ## 1.0.22
 
 - Dependency updates:
