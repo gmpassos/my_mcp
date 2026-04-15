@@ -1,3 +1,9 @@
+## 1.0.26
+
+- `EvaluateDartCodeTool`:
+  - Updated `inputSchema` for `code` property:
+    - Expanded restrictions to disallow imports, external dependencies, exceptions, throw, try/catch, null-safety operators, and async/await.
+
 ## 1.0.25
 
 - Dependency updates:

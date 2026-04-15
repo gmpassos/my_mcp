@@ -21,7 +21,7 @@ Dart code to execute.
 
 Rules:
 - Must be valid Dart code
-- No imports or external dependencies
+- No support for: imports, external dependencies, exceptions, throw, try/catch, null-safety operators, async/await.
 - Can define functions and classes
 - MUST NOT execute the function directly
 - MUST only DEFINE the function to be invoked
