@@ -1,3 +1,8 @@
+## 1.0.40
+
+- Dependency updates:
+  - `apollovm`: updated from ^0.1.10 to ^0.1.11
+
 ## 1.0.39
 
 - `FxCurrencyTool`:
