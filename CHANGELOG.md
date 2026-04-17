@@ -1,3 +1,9 @@
+## 1.0.37
+
+- `FxCurrencyTool`:
+  - Updated exchange rate extraction logic in `call` method:
+    - Added support for base rates represented as a list by extracting the last rate entry.
+
 ## 1.0.36
 
 - `FxCurrencyTool`:

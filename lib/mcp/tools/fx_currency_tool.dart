@@ -111,6 +111,11 @@ class FxCurrencyTool extends BaseTool {
       rate = (decoded['rates'][to] as num?)?.toDouble();
     }
 
+    // base rates list lookup
+    else if (decoded is Map && decoded['rates'] is List) {
+      rate = ((decoded['rates'] as List).last['rate'] as num?)?.toDouble();
+    }
+
     final result = rate != null ? rate * amount : null;
 
     return CallToolResult.fromStructuredContent({
