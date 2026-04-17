@@ -55,13 +55,19 @@ Ignored if dayOffset is provided
   ToolOutputSchema get outputSchema => ToolOutputSchema(
         properties: {
           'iso': JsonSchema.string(
-            description: 'ISO8601 datetime string',
+            description: 'ISO 8601 datetime string',
           ),
           'timezone': JsonSchema.string(
             description: 'Resolved timezone name',
           ),
           'date': JsonSchema.string(
             description: 'Date in YYYY-MM-DD',
+          ),
+          'time': JsonSchema.string(
+            description: 'Time in HH:mm:ss',
+          ),
+          'weekday': JsonSchema.string(
+            description: 'Day of the week (e.g. Monday)',
           ),
           'offsetMinutes': JsonSchema.number(
             description: 'Timezone offset in minutes',
@@ -118,6 +124,7 @@ Ignored if dayOffset is provided
         'date': "${now.year}-${_two(now.month)}-${_two(now.day)}",
         'time': "${_two(now.hour)}:${_two(now.minute)}:${_two(now.second)}",
         'offsetMinutes': now.timeZone.offset.inMinutes,
+        'weekday': _weekday(now.weekday),
       });
     } catch (e) {
       return CallToolResult(
@@ -151,4 +158,17 @@ Ignored if dayOffset is provided
   }
 
   String _two(int n) => n >= 10 ? '$n' : '0$n';
+
+  String _weekday(int w) {
+    const days = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ];
+    return days[w - 1]; // DateTime.weekday is 1=Mon ... 7=Sun
+  }
 }

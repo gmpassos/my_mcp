@@ -1,3 +1,13 @@
+## 1.0.30
+
+- `DateTimeTool`:
+  - `outputSchema`: updated description of `iso` field to "ISO 8601 datetime string".
+  - `outputSchema`: added new output fields:
+    - `time`: string, time in HH:mm:ss format.
+    - `weekday`: string, day of the week (e.g. Monday).
+  - `execute` method: included `time` and `weekday` in the returned structured content.
+  - Added private helper method `_weekday(int)` to convert weekday integer to weekday name string.
+
 ## 1.0.29
 
 - `date_time_tool.dart`:
