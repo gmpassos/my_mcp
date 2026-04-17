@@ -1,6 +1,6 @@
 name: "my_mcp"
 description: A Model Context Protocol (MCP) server.
-version: 1.0.35
+version: 1.0.36
 publish_to: none
 # repository: https://github.com/my_org/my_repo
 

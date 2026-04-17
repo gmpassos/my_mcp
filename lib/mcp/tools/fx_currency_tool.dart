@@ -5,7 +5,6 @@ import 'package:mcp_dart/mcp_dart.dart';
 
 import 'base_tool.dart';
 
-/// Fetches currency exchange rates from fxapi.app (no API key required).
 class FxCurrencyTool extends BaseTool {
   @override
   String get name => 'fx_currency';
@@ -18,42 +17,24 @@ class FxCurrencyTool extends BaseTool {
       );
 
   @override
-  String get description => 'Fetches currency exchange rates from fxapi.app. '
-      'Supports base currency queries (e.g. USD.json) and direct pairs '
-      '(e.g. USD/EUR.json). Optional amount conversion and date support.';
+  String get description =>
+      'Fetch FX rates from fxapi.app. Supports pairs, base rates, and historical dates.';
 
   @override
   ToolInputSchema get inputSchema => ToolInputSchema(
         properties: {
-          'from': JsonSchema.string(
-            description: 'Base currency (e.g. USD, EUR, BTC)',
-          ),
-          'to': JsonSchema.string(
-            description: 'Target currency (optional for full rates)',
-          ),
-          'amount': JsonSchema.number(
-            description: 'Optional amount to convert (default: 1)',
-          ),
+          'from':
+              JsonSchema.string(description: 'Base currency (USD, EUR, BTC)'),
+          'to': JsonSchema.string(description: 'Target currency (optional)'),
+          'amount':
+              JsonSchema.number(description: 'Amount to convert (default: 1)'),
           'date': JsonSchema.string(
-            description: 'Optional historical date YYYY-MM-DD',
+            description: 'Single date (YYYY-MM-DD) or ignored if using range',
           ),
+          'dateFrom': JsonSchema.string(description: 'Historical start date'),
+          'dateTo': JsonSchema.string(description: 'Historical end date'),
         },
         required: ['from'],
-      );
-
-  @override
-  ToolOutputSchema? get outputSchema => ToolOutputSchema(
-        properties: {
-          'base': JsonSchema.string(),
-          'target': JsonSchema.string(),
-          'rate': JsonSchema.number(),
-          'amount': JsonSchema.number(),
-          'result': JsonSchema.number(),
-          'date': JsonSchema.string(),
-          'raw': JsonSchema.object(
-            description: 'Raw API response',
-          ),
-        },
       );
 
   @override
@@ -61,79 +42,84 @@ class FxCurrencyTool extends BaseTool {
     Map<String, dynamic> args,
     RequestHandlerExtra? extra,
   ) async {
-    logger.info("fx_currency> $args");
-
-    final from = (args['from'] as String).toLowerCase();
-    final to = (args['to'] as String?)?.toLowerCase();
+    final from = (args['from'] as String).toUpperCase();
+    final to = (args['to'] as String?)?.toUpperCase();
     final amount = (args['amount'] as num?)?.toDouble() ?? 1.0;
+
     final date = args['date'] as String?;
+    final dateFrom = args['dateFrom'] as String?;
+    final dateTo = args['dateTo'] as String?;
 
     Uri uri;
 
-    // Case 1: direct pair USD/EUR.json
-    if (to != null && to.isNotEmpty) {
+    // CASE 1: range OR single date (history API)
+    if (dateFrom != null && dateTo != null) {
       uri = Uri.https(
         'fxapi.app',
-        '/api/$from/$to.json',
+        '/api/history/$from/$to.json',
         {
-          if (date != null) 'date': date,
+          'from': dateFrom,
+          'to': dateTo,
+        },
+      );
+    } else if (date != null) {
+      // single-day historical request
+      uri = Uri.https(
+        'fxapi.app',
+        '/api/history/$from/$to.json',
+        {
+          'from': date,
+          'to': date,
         },
       );
     }
-    // Case 2: base currency USD.json
+
+    // CASE 2: direct pair
+    else if (to != null) {
+      uri = Uri.https(
+        'fxapi.app',
+        '/api/$from/$to.json',
+      );
+    }
+
+    // CASE 3: base rates
     else {
       uri = Uri.https(
         'fxapi.app',
         '/api/$from.json',
-        {
-          if (date != null) 'date': date,
-        },
       );
     }
 
     final response = await http.get(uri);
 
     if (response.statusCode != 200) {
-      throw Exception(
-        'FX API error: ${response.statusCode} ${response.body}',
-      );
+      throw Exception('FX API error: ${response.statusCode} ${response.body}');
     }
 
-    final data = response.body;
-
-    // NOTE: API may return JSON or simple structure depending on endpoint
-    final decoded = data.isNotEmpty ? _tryParseJson(data) : null;
+    final decoded = jsonDecode(response.body);
 
     double? rate;
-    String? base;
-    String? target;
+    String? target = to;
 
-    if (decoded is Map) {
-      base = decoded['base']?.toString();
-      target = decoded['target']?.toString();
-      rate = (decoded['rate'] as num?)?.toDouble();
+    // direct pair
+    if (decoded is Map && decoded['rate'] != null) {
+      rate = (decoded['rate'] as num).toDouble();
+    }
+
+    // base rates lookup
+    else if (decoded is Map && decoded['rates'] is Map && to != null) {
+      rate = (decoded['rates'][to] as num?)?.toDouble();
     }
 
     final result = rate != null ? rate * amount : null;
 
-    logger.info("fx_currency.response> rate=$rate");
-
     return CallToolResult.fromStructuredContent({
-      'base': base ?? from.toUpperCase(),
-      'target': target ?? to?.toUpperCase(),
+      'base': from,
+      'target': target,
       'rate': rate,
       'amount': amount,
       'result': result,
-      'date': date ?? DateTime.now().toIso8601String(),
       'raw': decoded,
     });
-  }
-
-  dynamic _tryParseJson(String body) {
-    try {
-      return jsonDecode(body);
-    } catch (_) {
-      return body;
-    }
   }
 }

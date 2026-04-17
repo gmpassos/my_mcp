@@ -1,7 +1,14 @@
-## 1.0.35
+## 1.0.36
 
 - `FxCurrencyTool`:
-  - `call` method: fixed `date` field in result to default to current ISO 8601 timestamp if `date` is null.
+  - Updated `call` method to use uppercase currency codes.
+  - Added support for historical date ranges with `dateFrom` and `dateTo` parameters.
+  - Refined URI construction for current, historical single date, and date range queries.
+  - Improved JSON response parsing to handle direct pairs and base rates.
+  - Removed default date field in result; returns raw API response instead.
+  - Simplified error handling and removed redundant JSON parsing fallback.
+  - Updated input schema to include `dateFrom` and `dateTo` for historical queries.
+  - Updated tool description for clarity on supported queries.
 
 ## 1.0.34
 
