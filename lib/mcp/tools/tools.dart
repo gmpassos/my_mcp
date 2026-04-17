@@ -6,6 +6,7 @@ import 'date_time_tool.dart';
 import 'evaluate_dart_code.dart';
 import 'evaluate_expression.dart';
 import 'fetch_url_tool.dart';
+import 'fx_currency_tool.dart';
 import 'google_news_tool.dart';
 import 'google_scholar_tool.dart';
 import 'pubdev_search_tool.dart';
@@ -23,4 +24,5 @@ List<BaseTool> createAllTools() => [
       PubDevSearchTool(),
       DateTimeTool(),
       GoogleScholarTool(),
+      FxCurrencyTool(),
     ];

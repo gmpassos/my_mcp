@@ -1,3 +1,14 @@
+## 1.0.34
+
+- Added new `FxCurrencyTool`:
+  - Fetches currency exchange rates from fxapi.app without requiring an API key.
+  - Supports querying by base currency or direct currency pairs.
+  - Supports optional amount conversion and historical date queries.
+  - Implements structured input and output schemas for currency conversion parameters and results.
+  - Handles HTTP requests and JSON parsing with error handling.
+- Updated `tools.dart`:
+  - Added import and registration of `FxCurrencyTool` in the tool list.
+
 ## 1.0.33
 
 - Added `GoogleScholarTool`:
