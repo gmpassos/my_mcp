@@ -6,6 +6,7 @@ import 'date_time_tool.dart';
 import 'evaluate_dart_code.dart';
 import 'evaluate_expression.dart';
 import 'fetch_url_tool.dart';
+import 'google_news_tool.dart';
 import 'pubdev_search_tool.dart';
 import 'wikipedia_search_tool.dart';
 
@@ -15,6 +16,7 @@ export 'base_tool.dart';
 List<BaseTool> createAllTools() => [
       UrlFetchTool(),
       WikipediaSearchTool(),
+      GoogleNewsTool(),
       EvaluateExpressionTool(),
       EvaluateDartCodeTool(),
       PubDevSearchTool(),

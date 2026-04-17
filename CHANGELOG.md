@@ -1,3 +1,15 @@
+## 1.0.32
+
+- Added new `GoogleNewsTool`:
+  - Fetches news articles from Google News RSS without requiring an API key.
+  - Supports input parameters: `query`, `country` (default `US`), `language` (default `en-US`), and optional `freshness` filter (`1h`, `1d`, `7d`).
+  - Parses RSS XML feed to extract article `title`, `source`, `url`, and `publishedAt`.
+  - Returns structured output with a list of news articles.
+- `tools.dart`:
+  - Registered `GoogleNewsTool` in the list of available tools.
+- `pubspec.yaml`:
+  - Added dependency on `xml` package version `^6.6.1` for XML parsing.
+
 ## 1.0.31
 
 - `WikipediaSearchTool`:
