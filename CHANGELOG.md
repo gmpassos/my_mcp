@@ -1,3 +1,26 @@
+## 1.0.27
+
+- Added new `DateTimeTool`:
+  - Returns current or relative date/time for a given location.
+  - Supports input parameters: `countryCode`, `stateCode`, `timezone`, `dayOffset`, and `date` keyword.
+  - Outputs ISO8601 datetime string, resolved timezone, date, time, and timezone offset in minutes.
+  - Resolves timezone by IANA name or country/state codes with fallback to GMT.
+  - Handles day offsets and keywords like "now", "today", "tomorrow", "yesterday".
+
+- `TimeZone` utility:
+  - Added copyright header.
+  - Fixed indentation in location lists.
+  - Corrected method `getLocationUSNewYork` to use 'America/New_York' timezone.
+  - Fixed `toIso8601StringNoNanoseconds` extension on `tz.TZDateTime`:
+    - Corrected offset formatting to include colon between hours and minutes.
+    - Used offset in milliseconds for accurate calculation.
+    - Improved variable naming for clarity.
+
+- `WikipediaSearchTool`:
+  - Updated `lang` input description to specify it must match the language of the `query` parameter and default to "en".
+
+- Added dependency on `timezone` package version `^0.11.0` in `pubspec.yaml`.
+
 ## 1.0.26
 
 - `EvaluateDartCodeTool`:

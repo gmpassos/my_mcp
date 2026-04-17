@@ -26,7 +26,8 @@ class WikipediaSearchTool extends BaseTool {
             description: 'Number of results (default: 5)',
           ),
           'lang': JsonSchema.string(
-            description: 'Wikipedia language (default: en)',
+            description: 'Wikipedia language (ISO code, e.g. en, pt, fr, es). '
+                'MUST match the language of the `query` parameter. Default: en',
           ),
         },
         required: ['query'],
