@@ -1,3 +1,8 @@
+## 1.0.41
+
+- `evaluate_dart_code.dart`:
+  - `vm.createRunner`: added parameter `importCorePackageMath: true` to enable importing the core `math` package in the Dart VM runner.
+
 ## 1.0.40
 
 - Dependency updates:

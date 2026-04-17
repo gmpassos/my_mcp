@@ -187,7 +187,7 @@ Example:
       extra?.sendProgress(5 / 10,
           message: "Preparing VM runtime...", total: 10);
 
-      final dartRunner = vm.createRunner('dart')!;
+      final dartRunner = vm.createRunner('dart', importCorePackageMath: true)!;
 
       final output = <String>[];
 
