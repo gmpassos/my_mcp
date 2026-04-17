@@ -1,3 +1,14 @@
+## 1.0.39
+
+- `FxCurrencyTool`:
+  - `inputSchema`: updated descriptions for `start`, `end`, and `date` fields to specify `YYYY-MM-DD` format; corrected required field from `from` to `base`.
+  - `execute`:
+    - Refactored URI construction logic for historical range, single date, pair, and base rates cases with consistent use of `target ?? base`.
+    - Added detailed logging for request URL, arguments, response status, and response body.
+    - Improved JSON decoding and rate extraction logic with safer type checks and null handling.
+    - Added logging for extracted rate and computed result.
+    - Included request URL in the returned structured content.
+
 ## 1.0.38
 
 - `FxCurrencyTool`:

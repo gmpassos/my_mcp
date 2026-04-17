@@ -29,13 +29,13 @@ class FxCurrencyTool extends BaseTool {
               JsonSchema.string(description: 'Target currency (optional)'),
           'amount':
               JsonSchema.number(description: 'Amount to convert (default: 1)'),
-          'start': JsonSchema.string(description: 'Historical start date'),
-          'end': JsonSchema.string(description: 'Historical end date'),
-          'date': JsonSchema.string(
-            description: 'Single date (YYYY-MM-DD) or ignored if using range',
-          ),
+          'start': JsonSchema.string(
+              description: 'Historical start date (YYYY-MM-DD)'),
+          'end': JsonSchema.string(
+              description: 'Historical end date (YYYY-MM-DD)'),
+          'date': JsonSchema.string(description: 'Single date (YYYY-MM-DD)'),
         },
-        required: ['from'],
+        required: ['base'],
       );
 
   @override
@@ -53,37 +53,30 @@ class FxCurrencyTool extends BaseTool {
 
     Uri uri;
 
-    // CASE 1: range OR single date (history API)
+    // CASE 1: range
     if (start != null && end != null) {
       uri = Uri.https(
         'fxapi.app',
-        '/api/history/$base/$target.json',
-        {
-          'from': start,
-          'to': end,
-        },
-      );
-    } else if (date != null) {
-      // single-day historical request
-      uri = Uri.https(
-        'fxapi.app',
-        '/api/history/$base/$target.json',
-        {
-          'from': date,
-          'to': date,
-        },
+        '/api/history/$base/${target ?? base}.json',
+        {'from': start, 'to': end},
       );
     }
 
-    // CASE 2: direct pair
+    // CASE 2: single date
+    else if (date != null) {
+      uri = Uri.https(
+        'fxapi.app',
+        '/api/history/$base/${target ?? base}.json',
+        {'from': date, 'to': date},
+      );
+    }
+
+    // CASE 3: pair
     else if (target != null) {
-      uri = Uri.https(
-        'fxapi.app',
-        '/api/$base/$target.json',
-      );
+      uri = Uri.https('fxapi.app', '/api/$base/$target.json');
     }
 
-    // CASE 3: base rates
+    // CASE 4: base rates
     else {
       uri = Uri.https(
         'fxapi.app',
@@ -91,32 +84,44 @@ class FxCurrencyTool extends BaseTool {
       );
     }
 
+    logger.info('fx_currency> request url: $uri');
+    logger.info('fx_currency> args: $args');
+
     final response = await http.get(uri);
 
+    logger.info(
+      'fx_currency> response status=${response.statusCode}',
+    );
+    logger.info(
+      'fx_currency> response body: ${response.body}',
+    );
+
     if (response.statusCode != 200) {
-      throw Exception('FX API error: ${response.statusCode} ${response.body}');
+      throw Exception(
+        'FX API error: ${response.statusCode} ${response.body}',
+      );
     }
 
     final decoded = jsonDecode(response.body);
 
     double? rate;
 
-    // direct pair
-    if (decoded is Map && decoded['rate'] != null) {
-      rate = (decoded['rate'] as num).toDouble();
-    }
-
-    // base rates lookup
-    else if (decoded is Map && decoded['rates'] is Map && target != null) {
-      rate = (decoded['rates'][target] as num?)?.toDouble();
-    }
-
-    // base rates list lookup
-    else if (decoded is Map && decoded['rates'] is List) {
-      rate = ((decoded['rates'] as List).last['rate'] as num?)?.toDouble();
+    if (decoded is Map<String, dynamic>) {
+      if (decoded['rate'] != null) {
+        rate = (decoded['rate'] as num).toDouble();
+      } else if (decoded['rates'] is Map && target != null) {
+        rate = (decoded['rates'][target] as num?)?.toDouble();
+      } else if (decoded['rates'] is List) {
+        final list = decoded['rates'] as List;
+        if (list.isNotEmpty && list.last is Map) {
+          rate = (list.last['rate'] as num?)?.toDouble();
+        }
+      }
     }
 
     final result = rate != null ? rate * amount : null;
+
+    logger.info('fx_currency> rate=$rate result=$result');
 
     return CallToolResult.fromStructuredContent({
       'base': base,
@@ -124,6 +129,7 @@ class FxCurrencyTool extends BaseTool {
       'rate': rate,
       'amount': amount,
       'result': result,
+      'url': uri.toString(),
       'raw': decoded,
     });
   }
