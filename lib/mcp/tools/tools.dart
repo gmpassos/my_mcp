@@ -2,6 +2,7 @@
 library;
 
 import 'base_tool.dart';
+import 'date_time_tool.dart';
 import 'evaluate_dart_code.dart';
 import 'evaluate_expression.dart';
 import 'fetch_url_tool.dart';
@@ -17,4 +18,5 @@ List<BaseTool> createAllTools() => [
       EvaluateExpressionTool(),
       EvaluateDartCodeTool(),
       PubDevSearchTool(),
+      DateTimeTool(),
     ];
