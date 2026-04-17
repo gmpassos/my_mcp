@@ -1,3 +1,8 @@
+## 1.0.31
+
+- `WikipediaSearchTool`:
+  - Updated `description` to include that results return URLs to pages with more information.
+
 ## 1.0.30
 
 - `DateTimeTool`:

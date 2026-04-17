@@ -16,7 +16,7 @@ class WikipediaSearchTool extends BaseTool {
 
   @override
   String get description =>
-      'Searches Wikipedia and returns a list of matching articles with summaries';
+      'Searches Wikipedia and returns a list of matching articles with summaries and URLs to pages with more information';
 
   @override
   ToolInputSchema get inputSchema => ToolInputSchema(
