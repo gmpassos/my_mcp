@@ -1,3 +1,13 @@
+## 1.0.38
+
+- `FxCurrencyTool`:
+  - Renamed input properties: `from` → `base`, `to` → `target`.
+  - Added input properties: `start`, `end` for historical date ranges.
+  - Updated API request URIs to use `base` and `target` parameters.
+  - Updated logic to handle historical date ranges with `start` and `end`.
+  - Adjusted response parsing to use `target` instead of `to`.
+  - Updated output structured content to reflect renamed parameters.
+
 ## 1.0.37
 
 - `FxCurrencyTool`:

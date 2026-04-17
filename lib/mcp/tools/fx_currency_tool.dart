@@ -23,16 +23,17 @@ class FxCurrencyTool extends BaseTool {
   @override
   ToolInputSchema get inputSchema => ToolInputSchema(
         properties: {
-          'from':
+          'base':
               JsonSchema.string(description: 'Base currency (USD, EUR, BTC)'),
-          'to': JsonSchema.string(description: 'Target currency (optional)'),
+          'target':
+              JsonSchema.string(description: 'Target currency (optional)'),
           'amount':
               JsonSchema.number(description: 'Amount to convert (default: 1)'),
+          'start': JsonSchema.string(description: 'Historical start date'),
+          'end': JsonSchema.string(description: 'Historical end date'),
           'date': JsonSchema.string(
             description: 'Single date (YYYY-MM-DD) or ignored if using range',
           ),
-          'dateFrom': JsonSchema.string(description: 'Historical start date'),
-          'dateTo': JsonSchema.string(description: 'Historical end date'),
         },
         required: ['from'],
       );
@@ -42,31 +43,31 @@ class FxCurrencyTool extends BaseTool {
     Map<String, dynamic> args,
     RequestHandlerExtra? extra,
   ) async {
-    final from = (args['from'] as String).toUpperCase();
-    final to = (args['to'] as String?)?.toUpperCase();
+    final base = (args['base'] as String).toUpperCase();
+    final target = (args['target'] as String?)?.toUpperCase();
     final amount = (args['amount'] as num?)?.toDouble() ?? 1.0;
 
     final date = args['date'] as String?;
-    final dateFrom = args['dateFrom'] as String?;
-    final dateTo = args['dateTo'] as String?;
+    final start = args['start'] as String?;
+    final end = args['end'] as String?;
 
     Uri uri;
 
     // CASE 1: range OR single date (history API)
-    if (dateFrom != null && dateTo != null) {
+    if (start != null && end != null) {
       uri = Uri.https(
         'fxapi.app',
-        '/api/history/$from/$to.json',
+        '/api/history/$base/$target.json',
         {
-          'from': dateFrom,
-          'to': dateTo,
+          'from': start,
+          'to': end,
         },
       );
     } else if (date != null) {
       // single-day historical request
       uri = Uri.https(
         'fxapi.app',
-        '/api/history/$from/$to.json',
+        '/api/history/$base/$target.json',
         {
           'from': date,
           'to': date,
@@ -75,10 +76,10 @@ class FxCurrencyTool extends BaseTool {
     }
 
     // CASE 2: direct pair
-    else if (to != null) {
+    else if (target != null) {
       uri = Uri.https(
         'fxapi.app',
-        '/api/$from/$to.json',
+        '/api/$base/$target.json',
       );
     }
 
@@ -86,7 +87,7 @@ class FxCurrencyTool extends BaseTool {
     else {
       uri = Uri.https(
         'fxapi.app',
-        '/api/$from.json',
+        '/api/$base.json',
       );
     }
 
@@ -99,7 +100,6 @@ class FxCurrencyTool extends BaseTool {
     final decoded = jsonDecode(response.body);
 
     double? rate;
-    String? target = to;
 
     // direct pair
     if (decoded is Map && decoded['rate'] != null) {
@@ -107,8 +107,8 @@ class FxCurrencyTool extends BaseTool {
     }
 
     // base rates lookup
-    else if (decoded is Map && decoded['rates'] is Map && to != null) {
-      rate = (decoded['rates'][to] as num?)?.toDouble();
+    else if (decoded is Map && decoded['rates'] is Map && target != null) {
+      rate = (decoded['rates'][target] as num?)?.toDouble();
     }
 
     // base rates list lookup
@@ -119,7 +119,7 @@ class FxCurrencyTool extends BaseTool {
     final result = rate != null ? rate * amount : null;
 
     return CallToolResult.fromStructuredContent({
-      'base': from,
+      'base': base,
       'target': target,
       'rate': rate,
       'amount': amount,
