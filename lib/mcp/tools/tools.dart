@@ -7,6 +7,7 @@ import 'evaluate_dart_code.dart';
 import 'evaluate_expression.dart';
 import 'fetch_url_tool.dart';
 import 'google_news_tool.dart';
+import 'google_scholar_tool.dart';
 import 'pubdev_search_tool.dart';
 import 'wikipedia_search_tool.dart';
 
@@ -21,4 +22,5 @@ List<BaseTool> createAllTools() => [
       EvaluateDartCodeTool(),
       PubDevSearchTool(),
       DateTimeTool(),
+      GoogleScholarTool(),
     ];

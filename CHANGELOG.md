@@ -1,3 +1,13 @@
+## 1.0.33
+
+- Added `GoogleScholarTool`:
+  - Implements Google Scholar search via HTML scraping without API key.
+  - Supports input parameters `query` (required) and optional `limit` (default 5).
+  - Returns results with fields: `title`, `authors`, `year`, `url`, and `snippet`.
+  - Uses user-agent header to mimic a browser for HTTP requests.
+- Updated `tools.dart`:
+  - Added import and registration of `GoogleScholarTool` in the tool list.
+
 ## 1.0.32
 
 - Added new `GoogleNewsTool`:
