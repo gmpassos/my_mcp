@@ -140,15 +140,13 @@ Ignored if dayOffset is provided
       }
 
       return tz.getLocation(tzName);
+    } else if (countryCode != null) {
+      return timeZone.getMainLocation(countryCode, stateCode) ??
+          (throw tz.LocationNotFoundException(
+              'Location for country "$countryCode"'
+              '${stateCode != null ? ' and state "$stateCode"' : ''} not found'));
     } else {
-      if (countryCode != null) {
-        return timeZone.getMainLocation(countryCode, stateCode) ??
-            (throw tz.LocationNotFoundException(
-                'Location for country "$countryCode"'
-                '${stateCode != null ? ' and state "$stateCode"' : ''} not found'));
-      } else {
-        return timeZone.getLocationGMT();
-      }
+      return timeZone.getLocationGMT();
     }
   }
 

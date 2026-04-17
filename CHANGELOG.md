@@ -1,3 +1,16 @@
+## 1.0.29
+
+- `date_time_tool.dart`:
+  - `getLocation` method:
+    - Fixed handling of `tzName` for 'GMT' and 'UTC' to call `timeZone.getLocationGMT()`.
+    - Added support for returning main location by `countryCode` and optional `stateCode` if `tzName` is null.
+    - Simplified fallback to GMT location when no parameters provided.
+
+- `timezone.dart`:
+  - `TimeZone` class:
+    - Updated `getLocationGMT` to return `tz.UTC` instead of `tz.getLocation('GMT')`.
+    - Minor formatting fixes.
+
 ## 1.0.28
 
 - `date_time_tool.dart`:

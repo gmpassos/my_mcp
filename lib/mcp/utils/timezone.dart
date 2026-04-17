@@ -27,7 +27,7 @@ class TimeZone {
 
   Map<String, tz.Location> get locations => tz.timeZoneDatabase.locations;
 
-  tz.Location getLocationGMT() => tz.getLocation('GMT');
+  tz.Location getLocationGMT() => tz.UTC;
 
   // USA:
 
