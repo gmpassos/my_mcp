@@ -124,7 +124,7 @@ class FxCurrencyTool extends BaseTool {
       'rate': rate,
       'amount': amount,
       'result': result,
-      'date': date,
+      'date': date ?? DateTime.now().toIso8601String(),
       'raw': decoded,
     });
   }

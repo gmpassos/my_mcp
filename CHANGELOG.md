@@ -1,3 +1,8 @@
+## 1.0.35
+
+- `FxCurrencyTool`:
+  - `call` method: fixed `date` field in result to default to current ISO 8601 timestamp if `date` is null.
+
 ## 1.0.34
 
 - Added new `FxCurrencyTool`:
