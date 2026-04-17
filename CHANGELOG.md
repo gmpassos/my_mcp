@@ -1,3 +1,17 @@
+## 1.0.28
+
+- `date_time_tool.dart`:
+  - `execute`: replaced inline timezone location resolution with `resolveLocation` method.
+  - Added `resolveLocation` method to centralize timezone location resolution logic.
+    - Throws `tz.LocationNotFoundException` if location for given country and state codes is not found.
+    - Handles special cases for 'GMT' and 'UTC' timezone names.
+
+- `timezone.dart`:
+  - `TimeZone`:
+    - `getLocationsByCountryCode`: added handling for 'GMT' and 'UTC' country codes returning GMT location.
+    - `getLocation`: added handling for 'GMT' and 'UTC' country codes returning GMT location.
+    - Normalized `countryCode` to uppercase and trimmed in `getLocation`.
+
 ## 1.0.27
 
 - Added new `DateTimeTool`:

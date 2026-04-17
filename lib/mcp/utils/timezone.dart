@@ -255,6 +255,10 @@ class TimeZone {
   List<tz.Location>? getLocationsByCountryCode(String countryCode) {
     countryCode = countryCode.trim().toUpperCase();
 
+    if (countryCode == 'GMT' || countryCode == 'UTC') {
+      return [getLocationGMT()];
+    }
+
     switch (countryCode) {
       case 'US':
         return getLocationUS();
@@ -359,6 +363,12 @@ class TimeZone {
   }
 
   tz.Location? getLocation(String countryCode, [String? stateCode]) {
+    countryCode = countryCode.trim().toUpperCase();
+
+    if (countryCode == 'GMT' || countryCode == 'UTC') {
+      return getLocationGMT();
+    }
+
     String validateStateCode(String? state, String country) {
       return state ??
           (throw StateError(

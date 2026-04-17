@@ -79,13 +79,7 @@ Ignored if dayOffset is provided
       final stateCode = args['stateCode'] as String?;
       final tzName = args['timezone'] as String?;
 
-      // Resolve location
-      final tz.Location location = tzName != null
-          ? tz.getLocation(tzName)
-          : (countryCode != null
-                  ? TimeZone().getMainLocation(countryCode, stateCode)
-                  : null) ??
-              TimeZone().getLocationGMT();
+      final location = resolveLocation(tzName, countryCode, stateCode);
 
       // Resolve day offset
       var dayOffset = 0;
@@ -132,6 +126,29 @@ Ignored if dayOffset is provided
         ],
         isError: true,
       );
+    }
+  }
+
+  tz.Location resolveLocation(
+      String? tzName, String? countryCode, String? stateCode) {
+    final timeZone = TimeZone();
+
+    if (tzName != null) {
+      var tzNameUC = tzName.trim().toUpperCase();
+      if (tzNameUC == 'GMT' || tzNameUC == 'UTC') {
+        timeZone.getLocationGMT();
+      }
+
+      return tz.getLocation(tzName);
+    } else {
+      if (countryCode != null) {
+        return timeZone.getMainLocation(countryCode, stateCode) ??
+            (throw tz.LocationNotFoundException(
+                'Location for country "$countryCode"'
+                '${stateCode != null ? ' and state "$stateCode"' : ''} not found'));
+      } else {
+        return timeZone.getLocationGMT();
+      }
     }
   }
 
