@@ -1,3 +1,8 @@
+## 1.0.43
+
+- Dependency updates:
+  - `apollovm`: updated from ^0.1.12 to ^0.1.13
+
 ## 1.0.42
 
 - `EvaluateDartCodeTool`:
