@@ -1,3 +1,11 @@
+## 1.0.42
+
+- `EvaluateDartCodeTool`:
+  - Updated `inputSchema` description to disallow `records` in Dart code input.
+
+- Dependencies:
+  - Updated `apollovm` from ^0.1.11 to ^0.1.12.
+
 ## 1.0.41
 
 - `evaluate_dart_code.dart`:
