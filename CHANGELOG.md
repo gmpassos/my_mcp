@@ -1,3 +1,10 @@
+## 1.0.45
+
+- Dependency updates:
+  - `apollovm`: updated from ^0.1.14 to ^0.1.15
+
+- Added new script `run-tcp-tunnel-client.bat`:
+
 ## 1.0.44
 
 - Dependency updates:
