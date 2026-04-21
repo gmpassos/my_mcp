@@ -1,3 +1,12 @@
+## 1.0.47
+
+- `EvaluateDartCodeTool`:
+  - Updated input schema description for `code` property:
+    - Added "lambdas" to the list of unsupported Dart features.
+
+- Dependencies:
+  - Updated `apollovm` from ^0.1.17 to ^0.1.18.
+
 ## 1.0.46
 
 - `EvaluateDartCodeTool`:
