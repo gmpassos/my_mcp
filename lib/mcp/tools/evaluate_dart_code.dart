@@ -21,7 +21,8 @@ Dart code to execute.
 
 Rules:
 - Must be valid Dart code
-- No support for: imports, external dependencies, records, exceptions, throw, try/catch, null-safety operators, async/await.
+- No support for: external dependencies, records, exceptions, throw, try/catch, null-safety operators, async/await.
+- Only can import `dart:math`.
 - Can define functions and classes
 - MUST NOT execute the function directly
 - MUST only DEFINE the function to be invoked

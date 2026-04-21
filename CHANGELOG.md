@@ -1,3 +1,12 @@
+## 1.0.46
+
+- `EvaluateDartCodeTool`:
+  - Updated `inputSchema` documentation to clarify that only `dart:math` can be imported.
+  - Removed "imports" from unsupported features list, allowing import of `dart:math`.
+
+- Dependencies:
+  - Updated `apollovm` from ^0.1.15 to ^0.1.17.
+
 ## 1.0.45
 
 - Dependency updates:
