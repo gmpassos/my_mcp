@@ -1,6 +1,6 @@
 name: "my_mcp"
 description: A Model Context Protocol (MCP) server.
-version: 1.0.50
+version: 1.0.51
 publish_to: none
 # repository: https://github.com/my_org/my_repo
 
@@ -16,7 +16,7 @@ dependencies:
   logging: ^1.3.0
   math_expressions: ^3.1.0
   mcp_dart: ^2.1.0
-  apollovm: ^0.1.21
+  apollovm: ^0.1.22
   timezone: ^0.11.0
   xml: ^6.6.1
 
@@ -26,4 +26,6 @@ dev_dependencies:
 
 dependency_overrides:
   freezed_annotation: ^3.1.0
+#  apollovm:
+#    path: ../apollovm_dart
 

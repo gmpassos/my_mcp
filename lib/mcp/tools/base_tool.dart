@@ -10,6 +10,7 @@
 /// - [execute]: Implementation of the tool logic
 library;
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:langchain/langchain.dart';
@@ -41,6 +42,22 @@ abstract class BaseTool {
 
   /// Optional metadata for the tool.
   Map<String, dynamic>? get meta => null;
+
+  Zone? _guardedZone;
+
+  Zone get guardedZone => _guardedZone ??= Zone.current.fork(
+      specification:
+          ZoneSpecification(handleUncaughtError: handleUncaughtError));
+
+  void handleUncaughtError(
+    Zone self,
+    ZoneDelegate parent,
+    Zone zone,
+    Object error,
+    StackTrace stackTrace,
+  ) {
+    logger.info("** Uncaught Error> $error", error, stackTrace);
+  }
 
   /// Execute the tool with the given arguments.
   ///

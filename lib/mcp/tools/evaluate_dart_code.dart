@@ -126,6 +126,30 @@ Example:
     var function = (args['function'] as String?)?.trim();
     final parameters = args['parameters'] as List?;
 
+    final completer = Completer<CallToolResult>();
+
+    guardedZone.runGuarded(() {
+      _executeDartCode(code, function, parameters, extra).then((r) {
+        completer.complete(r);
+      }, onError: (e, s) {
+        completer.complete(CallToolResult(
+          content: [
+            TextContent(text: 'Failed to execute Dart code: $e\n$s'),
+          ],
+          isError: true,
+        ));
+      });
+    });
+
+    return completer.future;
+  }
+
+  Future<CallToolResult> _executeDartCode(
+    String code,
+    String? function,
+    List? parameters, [
+    RequestHandlerExtra? extra,
+  ]) async {
     try {
       extra?.sendProgress(1 / 10, message: "Starting ApolloVM...", total: 10);
 
@@ -147,7 +171,9 @@ Example:
             isError: true,
           );
         }
-      } catch (e) {
+      } catch (e, s) {
+        logger.severe("evaluate_dart_code> ERROR loading code!", e, s);
+
         return CallToolResult(
           content: [
             TextContent(text: 'Error loading code: $e'),

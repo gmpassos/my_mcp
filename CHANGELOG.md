@@ -1,3 +1,21 @@
+## 1.0.51
+
+- `bin/client.dart`:
+  - Updated `McpClient.call` to support optional `sessionID` header and return a record with `result`, full `response`, `sessionID`, and response `headers`.
+  - Added handling for event-stream style responses in `call`.
+  - Added MCP session initialization with `initialize` method before calling tools.
+  - Updated example tool call to `evaluate_dart_code` with embedded Dart code for ratio change calculations.
+- `bin/server.dart`:
+  - Enhanced logging output to include error and stack trace details if present.
+- `lib/mcp/tools/base_tool.dart`:
+  - Added `guardedZone` with error handling for uncaught errors in tool execution zones.
+- `lib/mcp/tools/evaluate_dart_code.dart`:
+  - Wrapped Dart code execution in a guarded zone to catch uncaught errors.
+  - Refactored `execute` method to use `_executeDartCode` helper returning a `Future<CallToolResult>`.
+  - Added detailed error logging on code loading failure.
+- `pubspec.yaml`:
+  - Updated `apollovm` dependency from `^0.1.21` to `^0.1.22`.
+
 ## 1.0.50
 
 - Dependency updates:

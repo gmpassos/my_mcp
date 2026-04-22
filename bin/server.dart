@@ -52,8 +52,11 @@ void main(List<String> args) async {
 
 void _setupLogging(bool verbose) {
   logging.Logger.root.level = verbose ? logging.Level.ALL : logging.Level.INFO;
+
   logging.Logger.root.onRecord.listen((record) {
-    stderr.writeln('${record.level.name}: ${record.time}: ${record.message}');
+    stderr.writeln('${record.level.name}: ${record.time}: ${record.message}'
+        '${record.error != null ? '\nError: ${record.error}' : ''}'
+        '${record.stackTrace != null ? '\nStack:\n${record.stackTrace}' : ''}');
   });
 }
 
