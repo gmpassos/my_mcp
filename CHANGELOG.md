@@ -1,3 +1,8 @@
+## 1.0.52
+
+- `pubspec.yaml`:
+  - Updated `apollovm` dependency version from `^0.1.22` to `^0.1.23`.
+
 ## 1.0.51
 
 - `bin/client.dart`:
