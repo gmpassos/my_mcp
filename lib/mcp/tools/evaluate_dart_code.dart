@@ -10,7 +10,7 @@ class EvaluateDartCodeTool extends BaseTool {
 
   @override
   String get description =>
-      'Executes Dart code dynamically using Apollo VM and returns the evaluated result of the code';
+      'Executes Dart code dynamically using Apollo VM ${ApolloVM.VERSION} and returns the evaluated result of the code';
 
   @override
   ToolInputSchema get inputSchema => ToolInputSchema(

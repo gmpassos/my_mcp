@@ -1,3 +1,8 @@
+## 1.0.53
+
+- `EvaluateDartCodeTool`:
+  - Updated `description` to include `ApolloVM.VERSION` in the execution message.
+
 ## 1.0.52
 
 - `pubspec.yaml`:
