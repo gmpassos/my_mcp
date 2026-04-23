@@ -43,6 +43,11 @@ int sum(int a, int b) {
 '''
 """,
           ),
+          'validateOnly': JsonSchema.boolean(
+            description:
+                'If true, only validates the Dart code without executing it.',
+            defaultValue: false,
+          ),
           'function': JsonSchema.string(
             description: """
 Function name to invoke.
@@ -114,6 +119,10 @@ Example:
             description:
                 'Captured stdout: one entry per print() call, in order',
           ),
+          'validateOnly': JsonSchema.boolean(
+            description:
+                'True if the tool ran in validation-only mode (no execution performed).',
+          ),
         },
       );
 
@@ -123,13 +132,15 @@ Example:
     logger.info("evaluate_dart_code> $args");
 
     final code = args['code'] as String;
+    final validateOnly = args['validateOnly'] == true;
     var function = (args['function'] as String?)?.trim();
     final parameters = args['parameters'] as List?;
 
     final completer = Completer<CallToolResult>();
 
     guardedZone.runGuarded(() {
-      _executeDartCode(code, function, parameters, extra).then((r) {
+      _executeDartCode(code, validateOnly, function, parameters, extra).then(
+          (r) {
         completer.complete(r);
       }, onError: (e, s) {
         completer.complete(CallToolResult(
@@ -146,6 +157,7 @@ Example:
 
   Future<CallToolResult> _executeDartCode(
     String code,
+    bool validateOnly,
     String? function,
     List? parameters, [
     RequestHandlerExtra? extra,
@@ -184,6 +196,20 @@ Example:
 
       extra?.sendProgress(3 / 10,
           message: "Code successfully loaded.", total: 10);
+
+      if (validateOnly) {
+        extra?.sendProgress(10 / 10,
+            message: "Validation completed successfully.", total: 10);
+
+        logger.info("evaluate_dart_code> validation-only mode (no execution).");
+
+        return CallToolResult.fromStructuredContent({
+          'validateOnly': true,
+          'invokedFunction': null,
+          'result': null,
+          'output': <String>[],
+        });
+      }
 
       extra?.sendProgress(4 / 10,
           message: "Resolving function to invoke...", total: 10);
@@ -264,6 +290,7 @@ Example:
         'invokedFunction': function,
         'result': result,
         'output': output,
+        'validateOnly': false,
       });
     } catch (e, s) {
       logger.severe(

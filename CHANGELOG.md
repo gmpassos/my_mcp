@@ -1,3 +1,15 @@
+## 1.0.54
+
+- `evaluate_dart_code.dart`:
+  - Added `validateOnly` argument to input schema to enable validation-only mode without execution.
+  - Added `validateOnly` field to output schema indicating if validation-only mode was used.
+  - Updated `execute` method to pass `validateOnly` flag to `_executeDartCode`.
+  - Updated `_executeDartCode` to:
+    - Skip code execution and return early with validation-only result if `validateOnly` is true.
+    - Send progress updates reflecting validation completion.
+    - Log validation-only mode usage.
+  - Updated normal execution result to include `'validateOnly': false`.
+
 ## 1.0.53
 
 - `EvaluateDartCodeTool`:
