@@ -205,7 +205,7 @@ Example:
 
         return CallToolResult.fromStructuredContent({
           'validateOnly': true,
-          'invokedFunction': null,
+          'invokedFunction': '',
           'result': null,
           'output': <String>[],
         });

@@ -1,3 +1,9 @@
+## 1.0.55
+
+- `evaluate_dart_code.dart`:
+  - `evaluateDartCode`:
+    - Changed returned `invokedFunction` value from `null` to empty string `''` when `validateOnly` is true.
+
 ## 1.0.54
 
 - `evaluate_dart_code.dart`:
