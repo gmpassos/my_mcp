@@ -1,3 +1,8 @@
+## 1.0.56
+
+- Dependency updates:
+  - `apollovm`: updated from ^0.1.23 to ^0.1.24
+
 ## 1.0.55
 
 - `evaluate_dart_code.dart`:
